@@ -158,6 +158,11 @@ void BabySynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     }
 }
 
+MidiKeyboardState& BabySynthAudioProcessor::getKeyboardState()
+{
+    return mKeyboardState;
+}
+
 //==============================================================================
 bool BabySynthAudioProcessor::hasEditor() const
 {
