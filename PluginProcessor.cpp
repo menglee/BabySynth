@@ -97,12 +97,30 @@ void BabySynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    mSynth1.setCurrentPlaybackSampleRate(sampleRate);
+    mSynth2.setCurrentPlaybackSampleRate(sampleRate);
+    mKeyboardState.reset();
+    
+    //--- test
+    for (int i = 0; i < MAX_VOICES; i++)
+    {
+        mOsc_1_Voices[i] = new OscillatorVoice();
+        mOsc_1_Voices[i]->defaultValues();
+        mSynth1.addVoice(mOsc_1_Voices[i]);
+        
+        mOsc_2_Voices[i] = new OscillatorVoice();
+        mOsc_2_Voices[i]->defaultValues();
+        mSynth2.addVoice(mOsc_2_Voices[i]);
+    }
+    mSynth1.addSound(new OscillatorSound());
+    mSynth2.addSound(new OscillatorSound());
 }
 
 void BabySynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
+    mKeyboardState.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -144,18 +162,92 @@ void BabySynthAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    const int numSamples = buffer.getNumSamples();
+    mKeyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
+    mSynth1.renderNextBlock(buffer, midiMessages, 0, numSamples);
+    mSynth2.renderNextBlock(buffer, midiMessages, 0, numSamples);
+}
 
-        // ..do something to the data...
+void BabySynthAudioProcessor::osc_1_Mode_Changed(OscillatorMode oscMode)   //need to handle 2 osc
+{
+    switch (oscMode)
+    {
+        case OSCILLATOR_MODE_OFF:
+            osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_OFF);
+            break;
+        case OSCILLATOR_MODE_SINE:
+            osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_SINE);
+            break;
+        case OSCILLATOR_MODE_SAW:
+            osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_SAW);
+            break;
+        case OSCILLATOR_MODE_TRIANGLE:
+            osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_TRIANGLE);
+            break;
+        case OSCILLATOR_MODE_SQUARE:
+            osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_SQUARE);
+            break;
+        default:
+            break;
     }
+}
+
+void BabySynthAudioProcessor::osc_2_Mode_Changed(OscillatorMode oscMode)
+{
+    switch (oscMode)
+    {
+        case OSCILLATOR_MODE_OFF:
+            osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_OFF);
+            break;
+        case OSCILLATOR_MODE_SINE:
+            osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_SINE);
+            break;
+        case OSCILLATOR_MODE_SAW:
+            osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_SAW);
+            break;
+        case OSCILLATOR_MODE_TRIANGLE:
+            osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_TRIANGLE);
+            break;
+        case OSCILLATOR_MODE_SQUARE:
+            osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_SQUARE);
+            break;
+        default:
+            break;
+    }
+}
+
+void BabySynthAudioProcessor::ADSRchanged(double attack, double decay, double sustain, double release)     // temporarily handles both osc
+{
+    for(int i = 0; i < MAX_VOICES; ++i)
+    {
+        mOsc_1_Voices[i]->updateADSR(attack, decay, sustain, release);
+        
+        mOsc_2_Voices[i]->updateADSR(attack, decay, sustain, release);
+    }
+}
+
+void BabySynthAudioProcessor::filterChanged(FilterMode filterMode, double cutoff, double resonance)
+{
+    for(int i = 0; i < MAX_VOICES; ++i)
+    {
+        mOsc_1_Voices[i]->updateFilter(filterMode, cutoff, resonance);
+        
+        mOsc_2_Voices[i]->updateFilter(filterMode, cutoff, resonance);
+    }
+}
+
+void BabySynthAudioProcessor::osc_1_Mode_ChangedHelper(OscillatorMode oscMode)
+{
+    for (int i = 0; i < MAX_VOICES; ++i)
+    {
+        mOsc_1_Voices[i]->updateOscMode(oscMode);
+    }
+}
+
+void BabySynthAudioProcessor::osc_2_Mode_ChangedHelper(OscillatorMode oscMode)
+{
+    for (int i = 0; i < MAX_VOICES; ++i)
+        mOsc_2_Voices[i]->updateOscMode(oscMode);
 }
 
 MidiKeyboardState& BabySynthAudioProcessor::getKeyboardState()

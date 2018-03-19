@@ -16,7 +16,8 @@
 //==============================================================================
 /**
 */
-class BabySynthAudioProcessorEditor  : public AudioProcessorEditor
+class BabySynthAudioProcessorEditor  : public AudioProcessorEditor,
+    private Button::Listener, private Slider::Listener
 {
 public:
     BabySynthAudioProcessorEditor (BabySynthAudioProcessor&);
@@ -25,9 +26,36 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    
+    void buttonClicked (Button* button) override;
+    void sliderValueChanged (Slider* slider) override;
 
 private:
     MidiKeyboardComponent mKeyboardComponent;
+    
+    Slider mOsc1;
+    Slider mOsc2;
+    
+    Slider mAttackKnob;
+    Slider mDecayKnob;
+    Slider mSustainKnob;
+    Slider mReleaseKnob;
+    
+    Slider mFilterModeKnob;
+    Slider mFilterCutOffKnob;
+    Slider mFilterResonance;
+    
+    OscillatorMode waveSelector(int val);
+    
+    OscillatorMode oscModeArr[kNumOscModes] = { OSCILLATOR_MODE_OFF,
+                                                OSCILLATOR_MODE_SINE,
+                                                OSCILLATOR_MODE_SAW,
+                                                OSCILLATOR_MODE_TRIANGLE,
+                                                OSCILLATOR_MODE_SQUARE };
+    
+    FilterMode filtModeArr[kNumFilterModes] = { FILTER_MODE_LOWPASS,
+                                                FILTER_MODE_HIGHPASS,
+                                                FILTER_MODE_BANDPASS };
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Oscillator.h"
 
 //==============================================================================
 /**
@@ -56,9 +57,22 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     MidiKeyboardState& getKeyboardState();
+    
+    void osc_1_Mode_Changed(OscillatorMode oscMode);
+    void ADSRchanged(double attack, double decay, double sustain, double release);
+    void filterChanged(FilterMode filterMode, double cutoff, double resonance);
+    void osc_2_Mode_Changed(OscillatorMode oscMode);
 
 private:
+    const static int MAX_VOICES = 8;
     MidiKeyboardState mKeyboardState;
+    OscillatorVoice *mOsc_1_Voices[MAX_VOICES];
+    OscillatorVoice *mOsc_2_Voices[MAX_VOICES];
+    Synthesiser mSynth1;
+    Synthesiser mSynth2;
+    
+    void osc_1_Mode_ChangedHelper(OscillatorMode oscMode);
+    void osc_2_Mode_ChangedHelper(OscillatorMode oscMode);
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BabySynthAudioProcessor)
 };
