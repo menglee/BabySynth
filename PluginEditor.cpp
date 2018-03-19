@@ -15,7 +15,7 @@
 BabySynthAudioProcessorEditor::BabySynthAudioProcessorEditor (BabySynthAudioProcessor& p)
 : AudioProcessorEditor (&p), mKeyboardComponent(p.getKeyboardState(), MidiKeyboardComponent::horizontalKeyboard) , processor (p)
 {
-    setSize (400, 300);
+    setSize (500, 350);
     addAndMakeVisible(&mKeyboardComponent);
     
     mOsc1.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
