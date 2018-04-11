@@ -36,26 +36,27 @@ inline double doPolyBLEP(double currentAngle, double increment)
     return naive_saw - poly_blep(t, increment);
 }
 
-inline double custom_poly_blep(double t, double increment)      // hardcoding coefficients
+inline double custom_poly_blep(double t, double increment)
 {
-    double A = 0.976456801660105;
-    double B = 2.007199851381053;
-    double C = 1.021692122042724;
-    double D = 1.0;
-    double E = 2.0;
-    double F = 1.0;
+
+    double A = 0.95291360332021;
+    double B = 2.00719985138105;
+    double C = 1.0433842440854399;
+    
+    /*
+    double A {1.02267292072765};
+    double B {2.0091348555451};
+    double C {0.977410992026602}; */
     
     double dt = increment / (2.0 * double_Pi);
     // 0 <= t < 1
     if (t < dt) {
         t /= dt;
-        //return A*t*t*t*t*t - B*t*t*t*t + C*t*t*t - D*t*t + E*t - F;     //7k aliased
         return B*t - A*t*t - C;
     }
     // -1 < t < 0
     else if (t > 1.0 - dt) {
         t = (t - 1.0) / dt;
-        //return A*t*t*t*t*t + B*t*t*t*t + C*t*t*t + D*t*t + E*t + F;
         return A*t*t + B*t + C;
     }
     // 0 otherwise

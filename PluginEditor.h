@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "CustomLaf.h"
 
 //==============================================================================
 /**
@@ -32,6 +33,14 @@ public:
 
 private:
     MidiKeyboardComponent mKeyboardComponent;
+    
+    Image bkImg;
+    Image waveImg1[5];
+    Image waveImg2[5];
+    int currWaveIdx1 = 0;
+    int currWaveIdx2 = 0;
+    
+    CustomLaf laf;
     
     Slider mOsc1;
     Slider mOsc2;
