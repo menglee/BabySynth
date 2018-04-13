@@ -40,6 +40,9 @@ private:
     int currWaveIdx1 = 0;
     int currWaveIdx2 = 0;
     
+    Image filterMode[3];
+    int filterModeIdx = 0;
+    
     CustomLaf laf;
     
     Slider mOsc1;

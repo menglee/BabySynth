@@ -31,6 +31,10 @@ BabySynthAudioProcessorEditor::BabySynthAudioProcessorEditor (BabySynthAudioProc
     waveImg2[4] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveSqu.png"));
     waveImg2[5] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveLfoSaw.png"));
     
+    filterMode[0] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/FilterModeLo.png"));
+    filterMode[1] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/FilterModeHi.png"));
+    filterMode[2] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/FilterModeBand.png"));
+    
     addAndMakeVisible(&mKeyboardComponent);
     
     // --- OSC
@@ -85,7 +89,7 @@ BabySynthAudioProcessorEditor::BabySynthAudioProcessorEditor (BabySynthAudioProc
     
     // --- Filter
     mFilterModeKnob.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    mFilterModeKnob.setTextBoxStyle(juce::Slider::TextBoxAbove, false, 40, 20);
+    mFilterModeKnob.setTextBoxStyle(juce::Slider::NoTextBox, false, 40, 20);
     mFilterModeKnob.setRange(0, 2, 1);
     mFilterModeKnob.setValue(0);
     mFilterModeKnob.addListener(this);
@@ -121,6 +125,8 @@ void BabySynthAudioProcessorEditor::paint (Graphics& g)
                 waveImg1[currWaveIdx1].getWidth(), waveImg1[currWaveIdx1].getHeight());
     g.drawImage(waveImg2[currWaveIdx2], 130, 185, waveImg2[currWaveIdx2].getWidth(), waveImg2[currWaveIdx2].getHeight(), 0, 0,
                 waveImg2[currWaveIdx2].getWidth(), waveImg2[currWaveIdx2].getHeight());
+    g.drawImage(filterMode[filterModeIdx], 302, 185, filterMode[filterModeIdx].getWidth(), filterMode[filterModeIdx].getHeight(), 0, 0,
+                filterMode[filterModeIdx].getWidth(), filterMode[filterModeIdx].getWidth());
 }
 
 void BabySynthAudioProcessorEditor::resized()
@@ -156,14 +162,17 @@ void BabySynthAudioProcessorEditor::resized()
     rect2.removeFromLeft(leftSidePadding);
     mOsc2.setBounds(rect2.getX(), rect2.getY(), rotarySliderWidth, rotarySliderHeight);
     
-    rect2.removeFromLeft(rotarySliderWidth * 3);
-    mFilterModeKnob.setBounds(rect2.getX(), rect2.getY(), rotarySliderWidth, rotarySliderHeight);
+    Rectangle<int> rect3 (getLocalBounds());
+    rect3.removeFromTop(rotarySliderHeight * 2 + 15);
+    rect3.removeFromLeft(leftSidePadding);
+    rect3.removeFromLeft(rotarySliderWidth * 3);
+    mFilterModeKnob.setBounds(rect3.getX() + 5, rect3.getY() + 18, rotarySliderWidth - 18, rotarySliderHeight - 18);
     
-    rect2.removeFromLeft(rotarySliderWidth);
-    mFilterCutOffKnob.setBounds(rect2.getX(), rect2.getY(), rotarySliderWidth, rotarySliderHeight);
+    rect3.removeFromLeft(rotarySliderWidth);
+    mFilterCutOffKnob.setBounds(rect3.getX(), rect3.getY(), rotarySliderWidth, rotarySliderHeight);
     
-    rect2.removeFromLeft(rotarySliderWidth);
-    mFilterResonance.setBounds(rect2.getX(), rect2.getY(), rotarySliderWidth, rotarySliderHeight);
+    rect3.removeFromLeft(rotarySliderWidth);
+    mFilterResonance.setBounds(rect3.getX(), rect3.getY(), rotarySliderWidth, rotarySliderHeight);
     
     Rectangle<int> r (getLocalBounds().reduced(8));
     mKeyboardComponent.setBounds(r.removeFromBottom(70));
@@ -202,7 +211,9 @@ void BabySynthAudioProcessorEditor::sliderValueChanged (Slider* slider)
     if (slider == &mFilterModeKnob || slider == &mFilterCutOffKnob ||
         slider == &mFilterResonance)
     {
-        processor.filterChanged(filtModeArr[(int)mFilterModeKnob.getValue()],
+        filterModeIdx = (int)mFilterModeKnob.getValue();
+        repaint();
+        processor.filterChanged(filtModeArr[filterModeIdx],
                                 mFilterCutOffKnob.getValue(), mFilterResonance.getValue());
     }
 }
