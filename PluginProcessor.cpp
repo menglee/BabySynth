@@ -187,6 +187,9 @@ void BabySynthAudioProcessor::osc_1_Mode_Changed(OscillatorMode oscMode)   //nee
         case OSCILLATOR_MODE_SQUARE:
             osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_SQUARE);
             break;
+        case OSCILLATOR_MODE_LFO_SAW:
+            osc_1_Mode_ChangedHelper(OSCILLATOR_MODE_LFO_SAW);
+            break;
         default:
             break;
     }
@@ -210,6 +213,9 @@ void BabySynthAudioProcessor::osc_2_Mode_Changed(OscillatorMode oscMode)
             break;
         case OSCILLATOR_MODE_SQUARE:
             osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_SQUARE);
+            break;
+        case OSCILLATOR_MODE_LFO_SAW:
+            osc_2_Mode_ChangedHelper(OSCILLATOR_MODE_LFO_SAW);
             break;
         default:
             break;

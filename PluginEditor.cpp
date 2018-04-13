@@ -22,26 +22,28 @@ BabySynthAudioProcessorEditor::BabySynthAudioProcessorEditor (BabySynthAudioProc
     waveImg1[2] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveSaw.png"));
     waveImg1[3] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveTri.png"));
     waveImg1[4] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveSqu.png"));
+    waveImg1[5] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveLfoSaw.png"));
     
     waveImg2[0] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveOff.png"));
     waveImg2[1] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveSine.png"));
     waveImg2[2] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveSaw.png"));
     waveImg2[3] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveTri.png"));
     waveImg2[4] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveSqu.png"));
+    waveImg2[5] = ImageFileFormat::loadFrom(File("~/JUCE/projects/SynthResources/WaveLfoSaw.png"));
     
     addAndMakeVisible(&mKeyboardComponent);
     
     // --- OSC
     mOsc1.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     mOsc1.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 20);
-    mOsc1.setRange(0, 4, 1);
+    mOsc1.setRange(0, 5, 1);
     mOsc1.addListener(this);
     mOsc1.setLookAndFeel(&laf);
     addAndMakeVisible(&mOsc1);
     
     mOsc2.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     mOsc2.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 20);
-    mOsc2.setRange(0, 4, 1);
+    mOsc2.setRange(0, 5, 1);
     mOsc2.addListener(this);
     mOsc2.setLookAndFeel(&laf);
     addAndMakeVisible(&mOsc2);

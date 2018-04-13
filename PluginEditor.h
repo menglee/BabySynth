@@ -35,8 +35,8 @@ private:
     MidiKeyboardComponent mKeyboardComponent;
     
     Image bkImg;
-    Image waveImg1[5];
-    Image waveImg2[5];
+    Image waveImg1[6];
+    Image waveImg2[6];
     int currWaveIdx1 = 0;
     int currWaveIdx2 = 0;
     
@@ -60,7 +60,8 @@ private:
                                                 OSCILLATOR_MODE_SINE,
                                                 OSCILLATOR_MODE_SAW,
                                                 OSCILLATOR_MODE_TRIANGLE,
-                                                OSCILLATOR_MODE_SQUARE };
+                                                OSCILLATOR_MODE_SQUARE,
+                                                OSCILLATOR_MODE_LFO_SAW };
     
     FilterMode filtModeArr[kNumFilterModes] = { FILTER_MODE_LOWPASS,
                                                 FILTER_MODE_HIGHPASS,

@@ -89,6 +89,11 @@ void OscillatorVoice::renderNextBlock (AudioSampleBuffer& outputBuffer, int star
                     currentSample = (float) mFilter.process(squareValue * level * mEnvelopeGenerator.nextSample());
                     break;
                 }
+                case OSCILLATOR_MODE_LFO_SAW:
+                {
+                    currentSample = (float)mFilter.process((currentAngle / double_Pi - 1.0) * level * mEnvelopeGenerator.nextSample());
+                    break;
+                }
                 default:
                     break;
             }
