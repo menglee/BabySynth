@@ -17,6 +17,8 @@ public:
     CustomLaf()
     {
         setColour (Slider::textBoxBackgroundColourId, Colours::black);
+        setColour (Slider::trackColourId, Colours::yellow);
+        setColour (Slider::thumbColourId, Colours::red);
     }
     
     void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos,
